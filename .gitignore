@@ -60,3 +60,19 @@ Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+
+**/*.VC.db
+**/*.opensdf
+**/*.opendb
+**/*.sdf
+**/*.sln
+**/*.suo
+**/*.xcodeproj
+**/*.xcworkspace
+**/Build
+**/Binaries
+**/DerivedDataCache
+**/Intermediate
+**/Saved
+**/StarterContent
