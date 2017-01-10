@@ -76,3 +76,5 @@ DerivedDataCache/*
 **/Intermediate
 **/Saved
 **/StarterContent
+Builds/
+Content/_Levels/Battleground.umap
