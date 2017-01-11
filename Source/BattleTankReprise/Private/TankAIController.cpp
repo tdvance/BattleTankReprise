@@ -43,3 +43,25 @@ void ATankAIController::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("  AI found no player tank!"));
 	}
 }
+
+
+void ATankAIController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	//UE_LOG(LogTemp, Warning, TEXT("tick"));
+	AimAtPlayerTank();
+
+}
+
+
+void ATankAIController::AimAtPlayerTank()
+{
+	// move tank barrel towards where a shot would hit where cross hair intersects world
+	if (!GetPlayerTank() || !GetControlledTank())
+	{
+		return; //do nothing if no tank
+	}
+
+	GetControlledTank()->AimAt(GetPlayerTank()->GetActorLocation());
+
+}
