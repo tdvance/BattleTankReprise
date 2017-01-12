@@ -3,6 +3,7 @@
 #include "BattleTankReprise.h"
 #include "TankPlayerController.h"
 
+
 ATank* ATankPlayerController::GetControlledTank() const
 {
 	return Cast<ATank>(GetPawn());
@@ -24,6 +25,15 @@ void ATankPlayerController::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("  No controlled tank!"));
 	}
+}
+
+
+void ATankPlayerController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	//UE_LOG(LogTemp, Warning, TEXT("tick"));
+	AimTowardsCrosshair();
+
 }
 
 void ATankPlayerController::AimTowardsCrosshair()
@@ -79,14 +89,6 @@ bool ATankPlayerController::GetSightRayHitLocation(OUT FVector& HitLocation) con
 	//line trace along that direction and see what we hit (up to max range)
 	// if hit landscape, set HitLocation to coordinates and return true	
 	return true;
-}
-
-void ATankPlayerController::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-	//UE_LOG(LogTemp, Warning, TEXT("tick"));
-	AimTowardsCrosshair();
-
 }
 
 

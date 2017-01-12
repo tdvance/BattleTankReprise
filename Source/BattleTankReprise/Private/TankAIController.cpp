@@ -59,6 +59,7 @@ void ATankAIController::AimAtPlayerTank()
 	// move tank barrel towards where a shot would hit where cross hair intersects world
 	if (!GetPlayerTank() || !GetControlledTank())
 	{
+		UE_LOG(LogTemp, Error, TEXT("missing tank!"));
 		return; //do nothing if no tank
 	}
 
