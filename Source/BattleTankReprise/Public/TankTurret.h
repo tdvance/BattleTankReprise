@@ -8,7 +8,7 @@
 /**
  *  Holds turret properties and rotate method
  */
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent), hidecategories = ("Collision"))
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class BATTLETANKREPRISE_API UTankTurret : public UStaticMeshComponent
 {
 	GENERATED_BODY()
