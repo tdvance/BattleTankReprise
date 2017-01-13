@@ -25,7 +25,6 @@ void ATank::SetTurretReference(UTankTurret* TurretToSet)
 	TankAimingComponent->SetTurretReference(TurretToSet);
 }
 
-
 // Called when the game starts or when spawned
 void ATank::BeginPlay()
 {
@@ -44,4 +43,11 @@ void ATank::AimAt(FVector HitLocation)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s"), *GetName(), *HitLocation.ToString());
 	TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
+}
+
+
+
+void ATank::Fire()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Fire!"));
 }

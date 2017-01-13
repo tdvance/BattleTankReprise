@@ -10,8 +10,7 @@ UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;//TODO should this tick?
-
+	PrimaryComponentTick.bCanEverTick = false;
 	// ...
 }
 
@@ -56,17 +55,10 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 		AimDirection = LaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
 
-		UE_LOG(LogTemp, Warning, TEXT("%s Aiming toward: %s"), 
-			*GetOwner()->GetName(),*AimDirection.ToString());
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s can't aim; start: %s; end: %s; speed: %f"),
-			*GetOwner()->GetName(),
-			*Barrel->GetSocketLocation(FName("Projectile")).ToString(),
-			*HitLocation.ToString(),
-			(double)LaunchSpeed
-			);
+		//can't aim
 	}
 
 
