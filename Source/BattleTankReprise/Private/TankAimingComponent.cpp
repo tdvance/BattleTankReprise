@@ -3,16 +3,14 @@
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
+#include "Projectile.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
-	// ...
-}
 
+	PrimaryComponentTick.bCanEverTick = false;
+}
 
 
 void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
@@ -22,9 +20,8 @@ void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* Tur
 }
 
 
-
-void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
-{	
+void UTankAimingComponent::AimAt(FVector HitLocation)
+{
 
 	if (!ensure(Barrel) || !ensure(Turret))
 	{
@@ -35,20 +32,15 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	FVector AimDirection;
 
 	bool bHaveAimSolution = UGameplayStatics::SuggestProjectileVelocity(this, OUT LaunchVelocity,
-		Barrel->GetSocketLocation(FName("Projectile")), HitLocation, LaunchSpeed, 
+		Barrel->GetSocketLocation(FName("Projectile")), HitLocation, LaunchSpeed,
 		false, 0, 0, ESuggestProjVelocityTraceOption::DoNotTrace);
+
 	if (bHaveAimSolution)
 	{
 		AimDirection = LaunchVelocity.GetSafeNormal();
 		MoveBarrelTowards(AimDirection);
 
 	}
-	else
-	{
-		//can't aim
-	}
-
-
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
@@ -63,7 +55,26 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	FRotator DeltaRotator = AimAsRotator - BarrelRotator;
 	Barrel->Elevate(DeltaRotator.Pitch);
 	Turret->Rotate(DeltaRotator.Yaw);
-		
+
 }
 
 
+
+void UTankAimingComponent::Fire()
+{
+	bool isReloaded = (FPlatformTime::Seconds() - LastFireTime > ReloadTimeInSeconds);
+	if (!ensure(Barrel))
+	{
+		return;
+	}
+	if (isReloaded)
+	{
+		//spawn projectile at barrel projectile socket.
+		AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileBlueprint,
+			Barrel->GetSocketLocation(FName("Projectile")),
+			Barrel->GetSocketRotation(FName("Projectile")), FActorSpawnParameters());
+
+		Projectile->LaunchProjectile(LaunchSpeed);
+		LastFireTime = FPlatformTime::Seconds();
+	}
+}

@@ -4,54 +4,39 @@
 #include"TankAimingComponent.h"
 
 
-ATank* ATankPlayerController::GetControlledTank() const
-{
-	return Cast<ATank>(GetPawn());
-
-}
-
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UTankAimingComponent* AimingComponent = 
-		GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
-	if (!ensure(AimingComponent))
+	UTankAimingComponent* TankAimingComponent =
+		GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(TankAimingComponent))
 	{
-
+		return;
 	}
-	else
-	{
-		FoundAimingComponent(AimingComponent);
-	}
-	
-	ATank* Tank = GetControlledTank();
-	if (!ensure(Tank))
-	{
-	}
+	FoundAimingComponent(TankAimingComponent);
 }
-
 
 void ATankPlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	AimTowardsCrosshair();
-
 }
 
 void ATankPlayerController::AimTowardsCrosshair()
 {
-	// move tank barrel towards where a shot would hit where cross hair intersects world
-	if (!ensure(GetControlledTank()))
+	UTankAimingComponent* TankAimingComponent =
+		GetPawn()->FindComponentByClass<UTankAimingComponent>();
+
+	if (!ensure(TankAimingComponent))
 	{
-		return; //do nothing if no tank
+		return;
 	}
 
 	FVector HitLocation = FVector(1.0);
-	
+
 	if (GetSightRayHitLocation(OUT HitLocation))
 	{
-		GetControlledTank()->AimAt(HitLocation);
+		TankAimingComponent->AimAt(HitLocation);
 	}
 }
 
@@ -71,7 +56,7 @@ bool ATankPlayerController::GetSightRayHitLocation(OUT FVector& HitLocation) con
 	{
 		return false;
 	}
-	
+
 	FHitResult HitResult;
 	FVector CameraLocation = PlayerCameraManager->GetCameraLocation();
 

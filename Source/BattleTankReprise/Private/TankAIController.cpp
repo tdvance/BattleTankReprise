@@ -2,60 +2,28 @@
 
 #include "BattleTankReprise.h"
 #include "TankAIController.h"
-
-
-
-void ATankAIController::BeginPlay()
-{
-	Super::BeginPlay();
-
-	/*UE_LOG(LogTemp, Warning, TEXT("Tank AI Controller Begin Play"));
-
-	ATank* Tank = Cast<ATank>(GetPawn());
-	if (Tank)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("  AI Controlled tank: %s"), *Tank->GetName());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("  AI No controlled tank!"));
-	}
-
-	ATank* PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if (PlayerTank)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("  AI found player tank: %s"), *PlayerTank->GetName());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("  AI found no player tank!"));
-	}*/
-}
+#include "TankAimingComponent.h"
 
 
 void ATankAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	ATank* Tank = Cast<ATank>(GetPawn());
-	ATank* PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
 
 	AimAtPlayerTank();
-	Tank->Fire();
-	MoveToActor(PlayerTank, AcceptanceRadius);//TODO check radius is in cm
+	GetPawn()->FindComponentByClass<UTankAimingComponent>()->Fire();
+
+	MoveToActor(GetWorld()->GetFirstPlayerController()->GetPawn(), AcceptanceRadius);//TODO check radius is in cm
 }
 
 
 void ATankAIController::AimAtPlayerTank()
 {
-	ATank* Tank = Cast<ATank>(GetPawn());
-	ATank* PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	UTankAimingComponent* TankAimingComponent = 
+		GetPawn()->FindComponentByClass<UTankAimingComponent>();
 
-	// move tank barrel towards where a shot would hit where cross hair intersects world
-	if (!ensure(Tank) || !ensure(PlayerTank))
+	if (!ensure(TankAimingComponent))
 	{
 		return;
-	}	
-
-	Tank->AimAt(PlayerTank->GetActorLocation());
-
+	}
+	TankAimingComponent->AimAt(GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation());
 }
