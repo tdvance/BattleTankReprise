@@ -8,19 +8,26 @@
 
 // Sets default values
 ATank::ATank()
-{
- 
+{ 
 	PrimaryActorTick.bCanEverTick = false;
-	
+	TankAimingComponent = FindComponentByClass<UTankAimingComponent>();
 }
 
 
 void ATank::AimAt(FVector HitLocation)
 {
+
 	if (!ensure(TankAimingComponent))
 	{
-		return;
+		TankAimingComponent = FindComponentByClass<UTankAimingComponent>();
+		if (!ensure(TankAimingComponent))
+		{
+			return;
+		}
 	}
+	//UE_LOG(LogTemp, Warning, TEXT("Aim"));
+
+
 	TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
 }
 

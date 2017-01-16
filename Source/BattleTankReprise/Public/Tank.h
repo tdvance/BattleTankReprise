@@ -33,6 +33,7 @@ private:
 	ATank();
 
 	
+	//remove once firing is moved to aiming component
 	UPROPERTY(EditDefaultsOnly, Category = "Firing")
 	float LaunchSpeed = 10000.0f;
 
