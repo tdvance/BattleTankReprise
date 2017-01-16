@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+//(C) Todd D. Vance, Deplorable Mountaineer
 #include "BattleTankReprise.h"
 #include "TankAimingComponent.h"
 #include "TankBarrel.h"
@@ -14,35 +13,23 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
+
+
+void UTankAimingComponent::Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet)
 {
 	Barrel = BarrelToSet;
-}
-
-void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
-{
 	Turret = TurretToSet;
 }
 
+
+
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
-{
-	/*UE_LOG(LogTemp, Warning, TEXT("Tank: %s; Barrel location: %s; \n  HitLocation: %s LaunchSpeed : %f"), 
-		*GetOwner()->GetName(), *Barrel->GetComponentLocation().ToString(),  *HitLocation.ToString(), (double)LaunchSpeed);*/
+{	
 
-	if (!Barrel)
+	if (!ensure(Barrel) || !ensure(Turret))
 	{
-		UE_LOG(LogTemp, Error, TEXT("%s missing barrel!"), *GetOwner()->GetName());
-
 		return;
 	}
-
-	if (!Turret)
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s missing turret!"), *GetOwner()->GetName());
-
-		return;
-	}
-
 
 	FVector LaunchVelocity;
 	FVector AimDirection;
@@ -66,6 +53,11 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
+	if (!ensure(Barrel) || !ensure(Turret))
+	{
+		return;
+	}
+
 	FRotator BarrelRotator = Barrel->GetForwardVector().Rotation();
 	FRotator AimAsRotator = AimDirection.Rotation();
 	FRotator DeltaRotator = AimAsRotator - BarrelRotator;

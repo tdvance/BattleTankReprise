@@ -1,7 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// (C) Todd D. Vance, Deplorable Mountaineer
 #include "BattleTankReprise.h"
 #include "TankPlayerController.h"
+#include"TankAimingComponent.h"
 
 
 ATank* ATankPlayerController::GetControlledTank() const
@@ -14,16 +14,20 @@ void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("Tank Player Controller Begin Play"));
-
-	ATank* Tank = GetControlledTank();
-	if (Tank)
+	UTankAimingComponent* AimingComponent = 
+		GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("  Controlled tank: %s"), *Tank->GetName());
+
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("  No controlled tank!"));
+		FoundAimingComponent(AimingComponent);
+	}
+	
+	ATank* Tank = GetControlledTank();
+	if (!ensure(Tank))
+	{
 	}
 }
 
@@ -31,7 +35,6 @@ void ATankPlayerController::BeginPlay()
 void ATankPlayerController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	//UE_LOG(LogTemp, Warning, TEXT("tick"));
 	AimTowardsCrosshair();
 
 }
@@ -39,7 +42,7 @@ void ATankPlayerController::Tick(float DeltaSeconds)
 void ATankPlayerController::AimTowardsCrosshair()
 {
 	// move tank barrel towards where a shot would hit where cross hair intersects world
-	if (!GetControlledTank())
+	if (!ensure(GetControlledTank()))
 	{
 		return; //do nothing if no tank
 	}
@@ -61,7 +64,6 @@ bool ATankPlayerController::GetSightRayHitLocation(OUT FVector& HitLocation) con
 
 	FVector2D ScreenLocation = FVector2D(ViewportSizeX*CrossHairXLocation,
 		ViewportSizeY*CrossHairYLocation);
-	//UE_LOG(LogTemp, Warning, TEXT("ScreenLocation: %s"), *ScreenLocation.ToString());
 
 	// deproject screen position of cross hair to world direction
 	FVector LookDirection = GetLookDirection(ScreenLocation);
@@ -69,12 +71,7 @@ bool ATankPlayerController::GetSightRayHitLocation(OUT FVector& HitLocation) con
 	{
 		return false;
 	}
-	else
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("LookDirection: %s"), *LookDirection.ToString());
-	}
-
-
+	
 	FHitResult HitResult;
 	FVector CameraLocation = PlayerCameraManager->GetCameraLocation();
 
@@ -97,7 +94,7 @@ FVector ATankPlayerController::GetLookDirection(FVector2D ScreenLocation) const
 	FVector WorldLocation;
 	FVector WorldDirection;
 
-	if (DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, 
+	if (DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y,
 		OUT WorldLocation, OUT WorldDirection))
 	{
 		return WorldDirection;
