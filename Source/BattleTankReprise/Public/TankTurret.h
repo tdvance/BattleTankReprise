@@ -14,7 +14,7 @@ class BATTLETANKREPRISE_API UTankTurret : public UStaticMeshComponent
 	GENERATED_BODY()
 public:
 	//-1 is max downward movement, +1 is max upward movement
-	void Rotate(float RelativeSpeed);
+	bool Rotate(float RelativeSpeed);
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")

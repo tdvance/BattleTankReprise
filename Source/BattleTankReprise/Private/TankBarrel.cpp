@@ -4,14 +4,15 @@
 #include "TankBarrel.h"
 
 
-void UTankBarrel::Elevate(float RelativeSpeed)
+bool UTankBarrel::Elevate(float RelativeSpeed)
 {
 	//adjust barrel pitch and yaw by delta, taking into account delta seconds
 	
 
 	float ElevationChange = FMath::Clamp<float>(RelativeSpeed, -1, 1) * MaxDegreesPerSecond * GetWorld()->DeltaTimeSeconds;
 	float RawNewElevation = RelativeRotation.Pitch + ElevationChange;
-	SetRelativeRotation(FRotator(FMath::Clamp<float>(
-		RawNewElevation, MinElevationDegrees, MaxElevationDegrees), 0, 0));
-
+	float NewPitch = FMath::Clamp<float>(
+		RawNewElevation, MinElevationDegrees, MaxElevationDegrees);
+	SetRelativeRotation(FRotator(NewPitch, 0, 0));
+	return FMath::Abs(NewPitch - RelativeRotation.Pitch) > .01f;
 }

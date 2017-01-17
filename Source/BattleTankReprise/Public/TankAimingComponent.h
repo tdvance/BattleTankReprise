@@ -19,7 +19,6 @@ class UTankBarrel;
 class UTankTurret;
 class AProjectile;
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLETANKREPRISE_API UTankAimingComponent : public UActorComponent
 {
@@ -51,11 +50,19 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 		TSubclassOf<AProjectile> ProjectileBlueprint;
 
-	void MoveBarrelTowards(FVector AimDirection);
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, 
+		FActorComponentTickFunction *ThisTickFunction) override;
+
+	virtual void BeginPlay() override;
+	
+	bool IsBarrelMoving();
+
+	void MoveBarrelTowards();
 
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
+	FVector AimDirection = FVector::ZeroVector;
 	double LastFireTime = 0;
-
+	bool bBarrelMoving = false;
 
 };
