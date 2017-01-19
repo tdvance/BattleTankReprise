@@ -10,7 +10,14 @@ void ATankAIController::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	AimAtPlayerTank();
-	GetPawn()->FindComponentByClass<UTankAimingComponent>()->Fire();
+
+
+	EFiringStatus FiringStatus = 
+		GetPawn()->FindComponentByClass<UTankAimingComponent>()->GetFiringState();
+	if (FiringStatus == EFiringStatus::Ready)
+	{
+		GetPawn()->FindComponentByClass<UTankAimingComponent>()->Fire();
+	}
 
 	MoveToActor(GetWorld()->GetFirstPlayerController()->GetPawn(), AcceptanceRadius);//TODO check radius is in cm
 }

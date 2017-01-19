@@ -78,3 +78,7 @@ DerivedDataCache/*
 **/StarterContent
 Builds/
 Content/_Levels/Battleground.umap
+Content/Textures/T_Ground_Grass_N.uasset
+Content/Textures/T_Ground_Gravel_D.uasset
+Content/Textures/T_Ground_Grass_D.uasset
+Content/Tank/T_MacroVariation.uasset
